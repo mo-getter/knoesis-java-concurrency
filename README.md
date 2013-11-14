@@ -1,4 +1,4 @@
 knoesis-java-concurrency
 ========================
 
-Basic utilities to simply the development of concurrent Java programs.
+Basic utilities to simplify the development of concurrent Java programs.
