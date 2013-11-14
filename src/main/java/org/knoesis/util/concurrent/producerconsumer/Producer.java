@@ -1,5 +1,5 @@
 
-package org.knoesis.utils.concurrent.producerconsumer;
+package org.knoesis.util.concurrent.producerconsumer;
 
 /**
  * This interface specifies a producer of objects to be consumed by the {@link Consumer}s.

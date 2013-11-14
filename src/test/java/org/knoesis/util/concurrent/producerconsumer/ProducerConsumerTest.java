@@ -1,4 +1,4 @@
-package org.knoesis.utils.concurrent.producerconsumer;
+package org.knoesis.util.concurrent.producerconsumer;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;

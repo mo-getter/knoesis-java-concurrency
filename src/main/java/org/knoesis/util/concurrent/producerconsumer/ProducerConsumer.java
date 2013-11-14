@@ -1,4 +1,4 @@
-package org.knoesis.utils.concurrent.producerconsumer;
+package org.knoesis.util.concurrent.producerconsumer;
 
 import java.util.Collection;
 import java.util.LinkedList;

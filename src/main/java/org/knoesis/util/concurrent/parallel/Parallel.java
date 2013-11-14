@@ -1,11 +1,10 @@
 
-package org.knoesis.utils.concurrent.parallel;
+package org.knoesis.util.concurrent.parallel;
 
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import sun.org.mozilla.javascript.Callable;
 
 /**
  * General purpose utilities for writing concurrent programs.

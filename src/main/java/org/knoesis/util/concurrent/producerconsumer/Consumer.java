@@ -1,5 +1,5 @@
 
-package org.knoesis.utils.concurrent.producerconsumer;
+package org.knoesis.util.concurrent.producerconsumer;
 
 /**
  * This interface represents a consumer of objects produced.<br/><br/>Typical implementation:<br/><br/>

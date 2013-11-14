@@ -1,5 +1,5 @@
 
-package org.knoesis.utils.concurrent.parallel;
+package org.knoesis.util.concurrent.parallel;
 
 import java.util.ArrayList;
 import java.util.Collection;
