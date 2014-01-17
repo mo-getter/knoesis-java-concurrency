@@ -2,9 +2,12 @@
 package org.knoesis.util.concurrent.parallel;
 
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.knoesis.util.concurrent.producerconsumer.Consumer;
+import org.knoesis.util.concurrent.producerconsumer.Producer;
+import org.knoesis.util.concurrent.producerconsumer.ProducerConsumer;
+import org.knoesis.util.concurrent.producerconsumer.Production;
 
 /**
  * General purpose utilities for writing concurrent programs.
@@ -28,24 +31,12 @@ public class Parallel {
         if (size == 0) {
             return;
         }
-        final ExecutorService executor = Executors.newFixedThreadPool(Math.min(numThreads, size));
-        final CountDownLatch latch = new CountDownLatch(size);
-        for (final E e : elements) {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        operation.perform(e);
-                    } catch (RuntimeException ignored) {
-                    } finally {
-                        latch.countDown();
-                    }
-                }
-            });
+        final ProducerConsumer.Builder<E> pcb = ProducerConsumer.<E>newBuilder()
+                .addProducer(new CollectionProducer<E>(elements));
+        for (int i = 0; i < Math.min(numThreads, size) - 1; i++) {
+            pcb.addConsumer(new OperationConsumer<E>(operation));
         }
-        executor.shutdown();
-        latch.await();
-        executor.shutdownNow();
+        pcb.build().begin();
     }
     
     /**
@@ -62,5 +53,42 @@ public class Parallel {
     }
     
     private Parallel() {}
+    
+    private static class CollectionProducer<E> implements Producer<E> {
+
+        private final Iterable<E> elements;
+        
+        public CollectionProducer(Iterable<? extends E> elements) {
+            this.elements = (Iterable<E>) elements;
+        }
+        
+        @Override
+        public void produce(Production<E> production) {
+            try {
+                for (E element : elements) {
+                    production.put(element);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Parallel.class.getName()).log(Level.SEVERE, "Producer interrupted", ex);
+            }
+        }
+    }
+    
+    private static class OperationConsumer<E> implements Consumer<E> {
+
+        private final Operation<? super E> operation;
+
+        public OperationConsumer(Operation<? super E> operation) {
+            this.operation = operation;
+        }
+        
+        @Override
+        public void consume(Iterable<E> elements) {
+            for (E element : elements) {
+                operation.perform(element);
+            }
+        }
+        
+    }
 
 }
